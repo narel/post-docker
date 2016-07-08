@@ -1,0 +1,14 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+# Check if we have SSL certificates in config, otherwise copy it there
+# First the key file
+if [ ! -f /mail_settings/ssl/mail.key ]; then
+	cp /etc/ssl/private/ssl-cert-snakeoil.key /mail_settings/ssl/mail.key
+fi
+
+# Then the pem file
+if [ ! -f /mail_settings/ssl/mail.pem ]; then
+	cp /etc/ssl/certs/ssl-cert-snakeoil.pem /mail_settings/ssl/mail.pem
+	cp /etc/ssl/certs/ssl-cert-snakeoil.pem /mail_settings/ssl/mail_ca.crt
+fi

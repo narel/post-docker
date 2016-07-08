@@ -1,0 +1,20 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+export PGUSER=webmail
+export PGPASSWORD=$(jq -r '.webmail.db_password' $CONFIG_FILE)
+
+# database initialization can take a long time
+CNT=0
+until psql -h db -l; do
+    echo 'WAITING FOR DATABASE WEBMAIL...'
+    sleep 1
+done
+
+# check if there are relations, if not, init db
+res=$(echo "SELECT relname FROM pg_class WHERE relname='users'" | psql -h db -t webmail)
+if [ ! "$res" ]; then
+    psql -h db webmail < /www/SQL/postgres.initial.sql
+fi
+
+# TODO: upgrade database

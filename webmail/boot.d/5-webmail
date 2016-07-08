@@ -1,0 +1,11 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+DOCKER_RANDOM_STRING_24=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w24 | head -n1)
+sed -i "s/DOCKER_RANDOM_STRING_24/$DOCKER_RANDOM_STRING_24/" /www/config/config.inc.php
+
+DOCKER_DB_WEBMAIL_PASSWORD=$(jq -r '.webmail.db_password' $CONFIG_FILE)
+sed -i "s/DOCKER_DB_WEBMAIL_PASSWORD/$DOCKER_DB_WEBMAIL_PASSWORD/" /www/config/config.inc.php
+
+DOCKER_DB_PASSWORD=$(jq -r '.settings.db_password' $CONFIG_FILE)
+sed -i "s/DOCKER_DB_PASSWORD/$DOCKER_DB_PASSWORD/" /www/plugins/password/config.inc.php

@@ -1,0 +1,1 @@
+query =  SELECT maildir FROM mailbox WHERE mailbox.username = '%u@%d' AND active='1'

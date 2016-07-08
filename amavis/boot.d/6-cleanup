@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+rm -f /var/run/amavis/amavisd.lock /var/run/amavis/amavisd.pid

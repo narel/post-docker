@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DOMAIN="$1"
+SELECTOR="$2"
+
+cwd=$(pwd)
+tmpd=$(mktemp -d)
+cd "$tmpd"
+opendkim-genkey -d "$DOMAIN" -s "$SELECTOR"
+touch "$DOMAIN"
+cat *.private > "$DOMAIN"
+cat *.txt >> "$DOMAIN"
+mv "$DOMAIN" "$cwd"/
+echo "$DOMAIN"

@@ -1,0 +1,125 @@
+version: '2'
+services:
+    syslog:
+      restart: always
+      build: syslog
+      volumes:
+        - logs:/var/log
+      ports:
+        - "514:514/udp"
+        - "514:514/tcp"
+    core:
+      restart: always
+      build: ./core
+      ports:
+        - "25:25"
+        - "143:143"
+        - "587:587"
+        - "110:110"
+        - "993:993"
+        - "995:995"
+        - "465:465"
+      volumes:
+        - /srv/mail/settings:/mail_settings
+        - vmail:/vmail
+        - postgrey_data:/var/lib/postgrey
+        - postfix_data:/var/spool/postfix
+      links:
+       - amavis
+       - db
+      logging:
+        driver: syslog
+        options:
+          tag: "core"
+          syslog-address: "udp://127.0.0.1:514"
+    amavis:
+      restart: always
+      build: ./amavis
+      volumes:
+        - /srv/mail/settings:/mail_settings
+        - amavis_data:/var/lib/amavis
+        - clamav_data:/var/lib/clamav
+      links:
+        - db
+      logging:
+        driver: syslog
+        options:
+          tag: "amavis"
+          syslog-address: "udp://127.0.0.1:514"
+    db:
+      restart: always
+      build: ./db
+      volumes:
+        - db_data:/var/lib/postgresql/data
+        - /srv/mail/settings:/mail_settings
+      logging:
+        driver: syslog
+        options:
+          tag: "db"
+          syslog-address: "udp://127.0.0.1:514"
+
+    postfixadmin:
+      restart: always
+      build: ./postfixadmin
+      volumes:
+        - /srv/mail/settings:/mail_settings
+      links:
+        - db 
+        - core
+      logging:
+        driver: syslog
+        options:
+          tag: "postfixadmin"
+          syslog-address: "udp://127.0.0.1:514"
+    imapproxy:
+      restart: always
+      build: ./imapproxy
+      links:
+        - core
+      logging:
+        driver: syslog
+        options:
+          tag: "imapproxy"
+          syslog-address: "udp://127.0.0.1:514"
+    webmail:
+      restart: always
+      build: ./webmail
+      volumes:
+        - /srv/mail/settings:/mail_settings
+        - webmail_data:/www/logs
+      links:
+        - db 
+        - core
+        - imapproxy
+      logging:
+        driver: syslog
+        options:
+          tag: "webmail"
+          syslog-address: "udp://127.0.0.1:514"
+    proxy:
+      restart: always
+      build: ./proxy
+      volumes:
+        - /srv/mail/settings:/mail_settings
+      ports:
+        - "80:80"
+        - "443:443"
+      links:
+        - webmail
+        - postfixadmin
+      logging:
+        driver: syslog
+        options:
+          tag: "proxy"
+          syslog-address: "udp://127.0.0.1:514"
+
+volumes:
+  db_data:
+  postgrey_data:
+  postfix_data:
+  webmail_data:
+  amavis_data:
+  clamav_data:
+  vmail:
+  logs:
+

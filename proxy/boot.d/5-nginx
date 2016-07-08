@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+DOCKER_WEBMAIL_URL=$(jq -r '.webmail.url' "$CONFIG_FILE")
+sed -i "s/DOCKER_WEBMAIL_URL/$DOCKER_WEBMAIL_URL/" /etc/nginx/nginx.conf
+
+DOCKER_POSTFIXADMIN_URL=$(jq -r '.postfixadmin.url' "$CONFIG_FILE")
+sed -i "s/DOCKER_POSTFIXADMIN_URL/$DOCKER_POSTFIXADMIN_URL/" /etc/nginx/nginx.conf

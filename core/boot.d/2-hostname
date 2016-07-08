@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+# Update hostname if present in config
+NEW_HOSTNAME=$(jq -r '.settings.myhostname' "$CONFIG_FILE")
+sed -i "s/^myhostname = .*$/myhostname = $NEW_HOSTNAME/" /etc/postfix/main.cf
+echo $NEW_HOSTNAME > /etc/mailname
+

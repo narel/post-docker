@@ -1,0 +1,11 @@
+core:
+webmail - schema (init + upgrade)
+firewall
+
+purging /var/lib/amavis/virusmail
+
+Workaround for DNS lookup issue with Docker v1.11:
+options timeout:0.2
+options attempts:20
+options single-request
+

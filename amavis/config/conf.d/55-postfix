@@ -1,0 +1,10 @@
+use strict;
+
+@lookup_sql_dsn =  ( ['DBI:Pg:database=postfix;host=db;port=5432', 'postfix', 'DOCKER_DB_PASSWORD']);
+$sql_select_policy = 'SELECT \'Y\' as local, 1 as id FROM domain WHERE \'@\' || domain IN (%k)';
+$sql_select_white_black_list = undef;
+
+$max_servers = 10;
+
+#------------ Do not modify anything below this line -------------
+1;  # ensure a defined return

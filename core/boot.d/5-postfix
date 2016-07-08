@@ -1,0 +1,9 @@
+#!/bin/sh
+echo "Running `basename "$0"`"
+
+DOCKER_DB_MYNETWORKS=$(jq -r '.postfix.mynetworks' $CONFIG_FILE)
+if [ "$DOCKER_DB_MYNETWORKS" = "null" ]; then
+    DOCKER_DB_MYNETWORKS=""
+fi
+
+sed -i "s/DOCKER_DB_MYNETWORKS/$DOCKER_DB_MYNETWORKS/" /etc/postfix/main.cf

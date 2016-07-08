@@ -1,0 +1,25 @@
+{
+  "settings": {
+    "myhostname": "mail.example.com",
+    "mydomain": "mail.example.com",
+    "db_password": "secretpassword",
+    "imap_host": "mail.example.com",
+    "smtp_host": "mail.example.com",
+    "admin_email": "admin@example.com"
+  },
+  "postfix": {
+    "mynetworks": "1.2.3.4/16"
+  },
+  "dovecot": {
+    "password_encryption": "md5"
+  },
+  "webmail": {
+    "db_password": "secretpassword",
+    "url": "mail.example.com mail.*"
+  },
+  "postfixadmin": {
+    "setup_password": "secretpassword",
+    "url": "postfixadmin.example.com"
+  }
+}
+

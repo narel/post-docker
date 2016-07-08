@@ -1,0 +1,22 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+DOCKER_DB_PASSWORD=$(jq -r '.settings.db_password' $CONFIG_FILE)
+sed -i "s/DOCKER_DB_PASSWORD/$DOCKER_DB_PASSWORD/" /www/config.inc.php
+
+DOCKER_ADMIN_EMAIL=$(jq -r '.settings.admin_email' $CONFIG_FILE)
+sed -i "s/DOCKER_ADMIN_EMAIL/$DOCKER_ADMIN_EMAIL/" /www/config.inc.php
+
+DOCKER_PASSWORD_ENCRYPTION=$(jq -r '.dovecot.password_encryption' $CONFIG_FILE)
+sed -i "s/DOCKER_PASSWORD_ENCRYPTION/$DOCKER_PASSWORD_ENCRYPTION/" /www/config.inc.php
+
+DOCKER_IMAP_SERVER=$(jq -r '.settings.imap_host' $CONFIG_FILE)
+sed -i "s/DOCKER_IMAP_SERVER/$DOCKER_IMAP_SERVER/" /www/config.inc.php
+
+DOCKER_SMTP_SERVER=$(jq -r '.settings.smtp_host' $CONFIG_FILE)
+sed -i "s/DOCKER_SMTP_SERVER/$DOCKER_SMTP_SERVER/" /www/config.inc.php
+
+# setup password for postfixadmin
+export SETUP_PASSWORD=$(jq -r '.postfixadmin.setup_password' $CONFIG_FILE)
+DOCKER_SETUP_PASSWORD=$(php /password.php)
+sed -i "s/DOCKER_SETUP_PASSWORD/$DOCKER_SETUP_PASSWORD/" /www/config.inc.php

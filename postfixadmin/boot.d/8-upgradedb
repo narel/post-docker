@@ -1,0 +1,13 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+export PGUSER=postfix
+export PGPASSWORD=$(jq -r '.settings.db_password' $CONFIG_FILE)
+
+# database initialization can take a long time
+until psql -h db -l; do
+    echo 'WAITING FOR DATABASE...'
+    sleep 1
+done
+
+/usr/bin/php5 -c upgrade.php /www/upgrade.php

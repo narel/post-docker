@@ -1,0 +1,20 @@
+#!/bin/sh
+echo "Running `basename "$0"`"
+
+mkdir -p /etc/postfix/sql
+chown root:postfix /etc/postfix/sql
+chmod 750 /etc/postfix/sql
+
+DOCKER_DB_PASSWORD=$(jq -r '.settings.db_password' $CONFIG_FILE)
+for f in /etc/postfix/sql-template/*; do
+    fname=$(basename $f)
+    printf "user=postfix\npassword=$DOCKER_DB_PASSWORD\nhosts=db\ndbname=postfix\nport=5432\n" > "/etc/postfix/sql/$fname"
+    cat "$f" >> /etc/postfix/sql/$fname
+done
+
+chmod 640 /etc/postfix/sql/*.cf
+chown root:postfix /etc/postfix/sql/*.cf
+
+postmap /etc/postfix/transport
+postmap /etc/postfix/whitelist_limits
+

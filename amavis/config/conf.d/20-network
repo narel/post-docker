@@ -1,0 +1,9 @@
+use strict;
+
+# bind to all IP interfaces
+$inet_socket_bind = undef;
+@inet_acl = qw(127.0.0.0/8 172.0.0.0/8);
+$forward_method = 'smtp:core:10025';
+$notify_method = $forward_method;
+
+1;  # ensure a defined return

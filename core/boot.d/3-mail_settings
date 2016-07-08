@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+# Give postfix ownership of its files
+chown -R postfix:postfix /etc/postfix
+
+# Give vmail ownership of all mail folders
+chown -R vmail:vmail /vmail
+chmod u+w /vmail
+

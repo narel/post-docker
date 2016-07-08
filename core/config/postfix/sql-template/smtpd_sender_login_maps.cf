@@ -1,0 +1,5 @@
+query =
+    SELECT '%u'||'@'||target_domain FROM alias_domain WHERE alias_domain='%d'
+    UNION
+    SELECT goto FROM alias WHERE address='%s' and active='1'
+    UNION SELECT '%s';

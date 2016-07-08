@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+DOCKER_DB_PASSWORD=$(jq -r '.settings.db_password' "$CONFIG_FILE")
+sed -i "s/DOCKER_DB_PASSWORD/$DOCKER_DB_PASSWORD/" /etc/dovecot/dovecot-sql.conf.ext
+
+# workaround
+rm -f /var/run/dovecot/master.pid

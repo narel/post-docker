@@ -1,0 +1,20 @@
+#!/bin/bash
+echo "Running `basename "$0"`"
+
+#first_fqdn="\$myhostname = \"$(jq -r '.domains | keys | .[0]' "$CONFIG_FILE")\";"
+#domain_string=$(jq '.domains | keys | .[]' "$CONFIG_FILE" | paste -s -d ',')
+#domain_acl="@local_domains_acl = ( $domain_string );"
+
+#sed "/# DOCKERMAIL DOMAINS START/,/# DOCKERMAIL DOMAINS END/{//!d}" /etc/amavis/conf.d/05-node_id -i
+#sed "/# DOCKERMAIL DOMAINS START/,/# DOCKERMAIL DOMAINS END/{//!d}" /etc/amavis/conf.d/50-user -i
+#sed "/# DOCKERMAIL DOMAINS START/a $first_fqdn" /etc/amavis/conf.d/05-node_id -i
+#sed "/# DOCKERMAIL DOMAINS START/a $domain_acl" /etc/amavis/conf.d/50-user -i
+
+if jq -e '.settings.db_password?' "$CONFIG_FILE" > /dev/null
+then
+    DB_PASSWORD=$(jq -r '.settings.db_password' $CONFIG_FILE)
+    sed -i "s/DOCKER_DB_PASSWORD/$DB_PASSWORD/" /etc/amavis/conf.d/55-postfix
+fi
+
+jq -r '.settings.myhostname' $CONFIG_FILE > /etc/mailname
+
