@@ -21,8 +21,6 @@ def prepare_debian8():
     run('systemctl enable docker')
     run('service docker start')
     run('which pip || apt-get -y install python-pip --no-install-recommends && pip install docker-compose')
-    # /lib/systemd/system/docker.service
-    # ExecStart=/usr/bin/docker daemon -H fd:// --userland-proxy=false
     print (u"TODO: Modify /lib/systemd/system/docker.service, set:\nExecStart=/usr/bin/docker daemon -H fd:// --userland-proxy=false")
 
 def only_one(name):
@@ -69,6 +67,7 @@ def build():
     prod_sync()
     with cd(REMOTE_DIR):
         run('docker pull debian:jessie')
+        run('docker pull postgres:latest')
         run('docker build -t poczta_base base')
         run('docker-compose build')
 
