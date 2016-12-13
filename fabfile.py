@@ -75,6 +75,7 @@ def prod():
     env.user = 'root'
     prod_prepare()
     prod_sync()
+    build()
     prod_start()
 
 def stop():
